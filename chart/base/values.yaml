@@ -42,6 +42,6 @@ vcsInfo:
 
 partOf: ""
 
-connectsTo: inventory-management-bff-apj
+connectsTo: "inventory-management-bff-apj"
 
 runtime: js
