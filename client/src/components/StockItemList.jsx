@@ -13,41 +13,44 @@ import Header from "../pattern-components/Header";
 import "../pattern-components/patterns.scss";
 
 class StockItemList extends Component {
-  title = 'Table List';
-  subtitle = 'This pattern will display and array of model objects in a multi column grid/table.';
+  title = 'Stock Items';
+  subtitle = 'This is the current inventory of items';
 
-  columns = ['Name', 'Address', 'City', 'State', 'ZipCode', 'Country'];
-  formatters = {
-    'ZipCode': function(val) {
-      return val + '-0000';
-    }
-  };
+  columns = [
+      "name",
+      "description",
+      "stock",
+      "unitPrice",
+      "picture",
+      "manufacturer",
+  ];
+  formatters = {};
 
   data = [
-    {
-      Name: "Lin",
-      Address: "123 Main Street",
-      City: "Austin",
-      State: "TX",
-      ZipCode: "12345",
-      Country: "United States"
-    },
-    {
-      Name: "Mak",
-      Address: "45 2nd Street",
-      City: "Austin",
-      State: "TX",
-      ZipCode: "78766",
-      Country: "United States"
-    },
-    {
-      Name: "Joe",
-      Address: "40 Down Street",
-      City: "San Francisco",
-      State: "CA",
-      ZipCode: "90706",
-      Country: "United States"
-    }
+      {
+        "name": "Item 1",
+        "description": "The first item",
+        "stock": 10,
+        "unitPrice": 100.0,
+        "picture": "test",
+        "manufacturer": "unknown",
+      },
+      {
+        "name": "Item 2",
+        "description": "The second item",
+        "stock": 15,
+        "unitPrice": 120.5,
+        "picture": "test1",
+        "manufacturer": "Apple",
+      },
+      {
+        "name": "Item 3",
+        "description": "The third item",
+        "stock": 20,
+        "unitPrice": 75.5,
+        "picture": "test1",
+        "manufacturer": "Sony",
+      }
   ];
 
   constructor(props) {
@@ -57,19 +60,16 @@ class StockItemList extends Component {
       selectedRow: 0,
     };
   }
-
   async componentDidMount() {
-
     this.setState({
-      data: this.data,
-    })
+      data: await this.props.stockService.listStockItems()
+    });
   }
-
   onRowClick = id => {
     this.setState({ selectedRow: id });
   };
 
-  renderRow = (row, id) => {
+renderRow = (row, id) => {
     return (
       <StructuredListRow key={id} onClick={() => this.onRowClick(id)}>
         <div>
@@ -90,7 +90,6 @@ class StockItemList extends Component {
         </div>
         {this.columns.map(col => {
           const format = this.formatters[col] || function(val) { return val; };
-
           return (
             <StructuredListCell key={col} className="simple-list-row">
               {format(row[col])}
@@ -103,7 +102,6 @@ class StockItemList extends Component {
 
   render() {
     const data = this.state.data;
-
     return (
       <div className="bx--grid pattern-container">
         <Header
@@ -126,7 +124,6 @@ class StockItemList extends Component {
                   })}
                 </StructuredListRow>
               </StructuredListHead>
-
               <StructuredListBody>
                 {data.map((row, i) => {
                   return this.renderRow(row, i);
